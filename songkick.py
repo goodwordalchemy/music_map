@@ -1,21 +1,24 @@
 import os
 import requests
 
-from flask import Flask, jsonify, render_template
+import settings
 
 SONGKICK_API_BASE_URL = 'http://api.songkick.com/api/3.0/'
 
 
-app = Flask(__name__)
-app.config.from_object('settings.Config')
+def _get_songkick_api_key():
+    return settings.Config.SONGKICK_API_KEY
 
 
 class SongkickCalendarsAPI(object):
 
+    def __init__(self):
+        self.api_key = _get_songkick_api_key()
+
     def _get(self, url_endpoint, params=None):
         full_url = os.path.join(SONGKICK_API_BASE_URL, url_endpoint)
 
-        payload = {'apikey': app.config['SONGKICK_API_KEY']}
+        payload = {'apikey': self.api_key}
 
         if params is not None:
             payload.update(params)
@@ -46,16 +49,4 @@ def get_user_events_list(username):
     events_list = response_json['resultsPage']['results']['calendarEntry']
     events_list = [e['event'] for e in events_list]
 
-    print('printing eventslist')
-    print(events_list)
-
     return events_list
-
-
-@app.route('/')
-def index():
-    return render_template('index.html', google_maps_api_key=app.config['GOOGLE_MAPS_API_KEY'])
-
-@app.route('/api/get_user_events_list')
-def _api_get_user_events_list():
-    return jsonify(get_user_events_list(app.config['SONGKICK_USERNAME']))
