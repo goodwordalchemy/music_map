@@ -13,9 +13,16 @@
         <h3>Music Map</h3>
         <div id="map"></div>
 
+        <!-- External Includes -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
         <script
             src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key|safe }}">
         </script>
+
+        <!-- Javascripts -->
         <script src="{{ url_for('static', filename='init_map.js') }}" type="text/javascript"></script>
+
+
+        <!-- Index -->
+        <script src="{{ url_for('static', filename='index.js') }}" type="text/javascript"></script>
 </html>
