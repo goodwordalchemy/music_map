@@ -12,6 +12,14 @@
     <body>
         <h3>Music Map</h3>
         <div id="map"></div>
+        <div id="date_picker">
+            <p>Choose Your Date Range</p>
+            <form name="date-range-picker-form" onsubmit="initMap()" action="#">
+                <input id="start_date" class="date-range-picker" type="date">
+                <input id="end_date" class="date-range-picker" type="date">
+                <input type="submit" value="Submit">
+            </form>
+        </div>
 
         <!-- External Includes -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>

@@ -44,9 +44,48 @@ function populate_map(data) {
     }
 }
 
+function formatDateForDatePicker(date){
+    var year = date.getFullYear().toString();
+
+    var month = date.getMonth() + 1;
+    month = month.toString();
+    if (month.length === 1){
+        month = '0' + month;
+    }
+
+    var day = date.getDate() + 1;
+    if (day.length === 1){
+        day = '0' + day;
+    }
+
+    return year + '-' + month + '-' + day;
+}
+
 function initMap() {
+    console.log('init map called');
+
+    today = new Date();
+    twoMonthsFromNow = new Date(new Date().setDate(today.getDate() + 60));
+
+    todayStr = formatDateForDatePicker(today);
+    twoMonthsFromNowStr = formatDateForDatePicker(twoMonthsFromNow);
+    
+    // sets default dates
+    startDateElt = document.getElementById('start_date');
+    endDateElt = document.getElementById('end_date');
+
+    start_date = startDateElt.value || todayStr;
+    startDateElt.value = start_date;
+
+    end_date = endDateElt.value || twoMonthsFromNowStr;
+    endDateElt.value = end_date;
+
     $.getJSON(
         '/api/get_user_events_list',
+        {
+            'start_date': start_date,
+            'end_date': end_date
+        },
         populate_map
     );
 }
