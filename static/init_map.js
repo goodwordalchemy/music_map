@@ -62,8 +62,6 @@ function formatDateForDatePicker(date){
 }
 
 function initMap() {
-    console.log('init map called');
-
     today = new Date();
     twoMonthsFromNow = new Date(new Date().setDate(today.getDate() + 60));
 
