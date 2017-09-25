@@ -1,7 +1,6 @@
 scipy
 numpy
 pandas
-nltk
 scikit-learn
 requests
 
