@@ -10,6 +10,8 @@ DATE_PICKER_FORMAT = '%Y-%m-%d'
 app = Flask(__name__)
 app.config.from_object('settings.Config')
 
+print('config', app.config)
+
 @app.route('/')
 def index():
     return render_template('index.html', google_maps_api_key=app.config['GOOGLE_MAPS_API_KEY'])
