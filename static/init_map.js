@@ -55,6 +55,7 @@ function formatDateForDatePicker(date){
 
     var day = date.getDate() + 1;
     day = day.toString();
+    console.log('day', day)
     if (day.length === 1){
         day = '0' + day;
     }

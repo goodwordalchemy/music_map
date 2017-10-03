@@ -15,8 +15,8 @@
         <div id="date_picker">
             <p>Choose Your Date Range</p>
             <form name="date-range-picker-form" onsubmit="initMap()" action="#">
-                <input id="start_date" class="date-range-picker" type="date">
-                <input id="end_date" class="date-range-picker" type="date">
+                <input id="start_date" class="date-range-picker" type="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
+                <input id="end_date" class="date-range-picker" type="date" required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}">
                 <input type="submit" value="Submit">
             </form>
         </div>

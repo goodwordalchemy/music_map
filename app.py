@@ -26,6 +26,8 @@ def _api_get_user_events_list():
 
     user_events_list = get_user_events_list(app.config['SONGKICK_USERNAME'])
 
+    print(user_events_list)
+
     filtered_user_events_list = []
     for event in user_events_list:
         event_date = datetime.strptime(event['start']['date'], DATE_PICKER_FORMAT)
