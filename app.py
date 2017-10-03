@@ -37,4 +37,5 @@ def _api_get_user_events_list():
 
 
 if __name__ == '__main__':
+    print(os.environ.get('PORT'))
     app.run()
