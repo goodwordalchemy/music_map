@@ -32,7 +32,7 @@ def _api_get_user_events_list():
         if event_date >= start_date and event_date <= end_date:
             filtered_user_events_list.append(event)
 
-    print(jsonify(filtered_user_events_list))
+    print(filtered_user_events_list)
     return jsonify(filtered_user_events_list)
 
 
