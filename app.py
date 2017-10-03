@@ -30,9 +30,9 @@ def _api_get_user_events_list():
     for event in user_events_list:
         event_date = datetime.strptime(event['start']['date'], DATE_PICKER_FORMAT)
         if event_date >= start_date and event_date <= end_date:
-            print(event)
             filtered_user_events_list.append(event)
 
+    print jsonify(filtered_user_events_list)
     return jsonify(filtered_user_events_list)
 
 
