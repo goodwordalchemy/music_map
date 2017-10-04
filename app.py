@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import logging
 
 from flask import Flask, jsonify, render_template, request
 
@@ -9,6 +10,9 @@ DATE_PICKER_FORMAT = '%Y-%m-%d'
 
 app = Flask(__name__)
 app.config.from_object('settings.Config')
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
+
 
 print('config', app.config)
 
