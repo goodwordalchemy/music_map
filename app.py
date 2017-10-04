@@ -16,8 +16,6 @@ app.logger.addHandler(logging.StreamHandler(sys.stdout))
 app.logger.setLevel(logging.ERROR)
 
 
-print('config', app.config)
-
 @app.route('/')
 def index():
     return render_template('index.html', google_maps_api_key=app.config['GOOGLE_MAPS_API_KEY'])
@@ -27,8 +25,6 @@ def index():
 def _api_get_user_events_list():
     start_date = datetime.strptime(request.args['start_date'], DATE_PICKER_FORMAT)
     end_date = datetime.strptime(request.args['end_date'], DATE_PICKER_FORMAT)
-
-    print('start_date: {}, end_date: {}'.format(start_date, end_date))
 
     user_events_list = get_user_events_list(app.config['SONGKICK_USERNAME'])
 
@@ -42,5 +38,4 @@ def _api_get_user_events_list():
 
 
 if __name__ == '__main__':
-    print(os.environ.get('PORT'))
     app.run()
