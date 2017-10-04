@@ -7,6 +7,8 @@ class Config(object):
     SONGKICK_USERNAME = os.environ.get('SONGKICK_USERNAME')
     SONGKICK_API_KEY = os.environ.get('SONGKICK_API_KEY')
 
+    secret_key = os.environ.get('APP_SECRET_KEY')
+
 
 class DevelopmentConfig(Config):
     DEBUG = True
