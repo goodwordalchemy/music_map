@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
+import json
 import logging
 import sys
 
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, render_template, request, Response
 
 from songkick import get_user_events_list
 
@@ -37,7 +38,7 @@ def _api_get_user_events_list():
         if event_date >= start_date and event_date <= end_date:
             filtered_user_events_list.append(event)
 
-    return jsonify(filtered_user_events_list)
+    return Response(json.dumps(filtered_user_events_list), mimetype='application/json')
 
 
 if __name__ == '__main__':
