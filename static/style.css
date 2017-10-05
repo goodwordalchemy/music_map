@@ -1,0 +1,20 @@
+div#event_table > table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#event_table > table > thead,tbody > tr > th,td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+div#event_table > table > tbody > tr:nth-child(even) {
+    background-color: #dddddd
+}
+
+div#map {
+    width: 100%;
+    height: 400px;
+    background-color: grey;
+}

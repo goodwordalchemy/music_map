@@ -1,10 +1,28 @@
+function formatDateForDatePicker(date){
+    var year = date.getFullYear().toString();
 
-function populate_map(data) {
+    var month = date.getMonth() + 1;
+    month = month.toString();
+    if (month.length === 1){
+        month = '0' + month;
+    }
+
+    var day = date.getDate() + 1;
+    day = day.toString();
+    if (day.length === 1){
+        day = '0' + day;
+    }
+
+    return year + '-' + month + '-' + day;
+}
+
+
+function populateMap(data) {
     var map_center = {city: "San Francisco, CA, US", lat: 37.7842566, lng: -122.4332961}
 
     var map = new google.maps.Map(document.getElementById('map'), {
-         zoom: 8,
-         center: map_center
+        center: map_center,
+        zoom: 4
     });
     
     var infoWindowCallbacks = [];
@@ -44,40 +62,80 @@ function populate_map(data) {
     }
 }
 
-function formatDateForDatePicker(date){
-    var year = date.getFullYear().toString();
 
-    var month = date.getMonth() + 1;
-    month = month.toString();
-    if (month.length === 1){
-        month = '0' + month;
+function populateTable(data) {
+    // initialize table
+    var tableDiv = document.getElementById('event_table');
+
+    var table = document.createElement('table');
+    tableDiv.appendChild(table);
+
+    // create table header
+    var thead = document.createElement('thead');
+    table.appendChild(thead);
+
+    var headerTr = document.createElement('tr');
+    thead.appendChild(headerTr);
+
+    var columnNames = [
+        'Name', 'Date', 'Location', 'Venue', 'songkick_uri'
+    ];
+    for (var i = 0; i < columnNames.length; i++){
+        var td = document.createElement('td');
+        headerTr.appendChild(td);
+
+        td.appendChild(document.createTextNode(columnNames[i]));
     }
+    
+    // create tabel body
+    var tbody = document.createElement('tbody');
+    table.appendChild(tbody);
 
-    var day = date.getDate() + 1;
-    day = day.toString();
-    console.log('day', day)
-    if (day.length === 1){
-        day = '0' + day;
+    for (var i = 0; i < data.length; i++) {
+        event = data[i];
+
+        var cellElements = [
+            event.displayName,
+            event.start.date,
+            event.location.city,
+            event.venue.displayName,
+            event.uri
+        ];
+
+        var tr = document.createElement('tr');
+        tbody.appendChild(tr);
+
+        for (var j = 0; j < cellElements.length; j++) {
+            var td = document.createElement('td');
+            td.appendChild(document.createTextNode(cellElements[j]));
+
+            tr.appendChild(td);
+        }
     }
-
-    return year + '-' + month + '-' + day;
 }
 
-function initMap() {
-    today = new Date();
-    twoMonthsFromNow = new Date(new Date().setDate(today.getDate() + 60));
 
-    todayStr = formatDateForDatePicker(today);
-    twoMonthsFromNowStr = formatDateForDatePicker(twoMonthsFromNow);
+function populateData(data) {
+    populateTable(data);
+    populateMap(data);
+}
+
+
+function initMap() {
+    var today = new Date();
+    var twoMonthsFromNow = new Date(new Date().setDate(today.getDate() + 60));
+
+    var todayStr = formatDateForDatePicker(today);
+    var twoMonthsFromNowStr = formatDateForDatePicker(twoMonthsFromNow);
     
     // sets default dates
-    startDateElt = document.getElementById('start_date');
-    endDateElt = document.getElementById('end_date');
+    var startDateElt = document.getElementById('start_date');
+    var endDateElt = document.getElementById('end_date');
 
-    start_date = startDateElt.value || todayStr;
+    var start_date = startDateElt.value || todayStr;
     startDateElt.value = start_date;
 
-    end_date = endDateElt.value || twoMonthsFromNowStr;
+    var end_date = endDateElt.value || twoMonthsFromNowStr;
     endDateElt.value = end_date;
 
     $.getJSON(
@@ -86,7 +144,7 @@ function initMap() {
             'start_date': start_date,
             'end_date': end_date
         },
-        populate_map
+        populateData
     );
 }
 
