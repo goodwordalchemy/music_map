@@ -17,6 +17,13 @@ function formatDateForDatePicker(date){
 }
 
 
+function getNDaysFromDate(date, ndays){
+    date.setDate(date.getDate() + ndays);
+
+    return date;
+}
+
+
 function populateMap(data) {
     var map_center = {city: "San Francisco, CA, US", lat: 37.7842566, lng: -122.4332961}
 
@@ -42,9 +49,28 @@ function populateMap(data) {
             content: contentString
         });
 
+        var now = new Date();
+        var startDate = new Date(event.start.date);
+        var color;
+        if (startDate < getNDaysFromDate(now, 7)) { 
+            color = 'red';
+        } else if (startDate < getNDaysFromDate(now, 14)) {
+            color = 'yellow';
+        } else if (startDate < getNDaysFromDate(now, 21)) {
+            color = 'green';
+        } else {
+            color = 'blue';
+        }
+
         var marker = new google.maps.Marker({
             position: event.location,
-            map: map
+            map: map,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 2,
+                fillColor: color,
+                strokeColor: color
+            }
         });
 
         markers[event_idx] = marker;
