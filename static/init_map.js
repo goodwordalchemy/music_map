@@ -27,10 +27,17 @@ function getNDaysFromDate(date, ndays){
 function populateMap(data) {
     var map_center = {city: "San Francisco, CA, US", lat: 37.7842566, lng: -122.4332961}
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    var mapNode = document.getElementById('map');
+    var map = new google.maps.Map(mapNode, {
         center: map_center,
         zoom: 4
     });
+
+    /*
+    This attaches the google maps object to the DOM element.  Without this, it's impossible to 
+    access map properties.
+    */
+    mapNode.gMap = map;
     
     var infoWindowCallbacks = [];
     var markers = [];
@@ -80,69 +87,87 @@ function populateMap(data) {
                 infoWindow.open(map, marker) 
             };
         })(marker, infoWindow);
-
    }
 
    for (var event_idx = 0; event_idx < data.length; event_idx++) {
         markers[event_idx].addListener('click', infoWindowCallbacks[event_idx]);
     }
-}
 
 
-function populateTable(data) {
-    // initialize table
-    var tableDiv = document.getElementById('event_table');
+    map.addListener('idle', function(domEvent) {
+        var filteredData = [];
+        var bounds = map.getBounds();
+        var ne = bounds.getNorthEast();
+        var sw = bounds.getSouthWest();
 
-    var table = document.createElement('table');
-    tableDiv.appendChild(table);
-
-    // create table header
-    var thead = document.createElement('thead');
-    table.appendChild(thead);
-
-    var headerTr = document.createElement('tr');
-    thead.appendChild(headerTr);
-
-    var columnNames = [
-        'Name', 'Date', 'Location', 'Venue', 'songkick_uri'
-    ];
-    for (var i = 0; i < columnNames.length; i++){
-        var td = document.createElement('td');
-        headerTr.appendChild(td);
-
-        td.appendChild(document.createTextNode(columnNames[i]));
-    }
-    
-    // create tabel body
-    var tbody = document.createElement('tbody');
-    table.appendChild(tbody);
-
-    for (var i = 0; i < data.length; i++) {
-        event = data[i];
-
-        var cellElements = [
-            event.displayName,
-            event.start.date,
-            event.location.city,
-            event.venue.displayName,
-            event.uri
-        ];
-
-        var tr = document.createElement('tr');
-        tbody.appendChild(tr);
-
-        for (var j = 0; j < cellElements.length; j++) {
-            var td = document.createElement('td');
-            td.appendChild(document.createTextNode(cellElements[j]));
-
-            tr.appendChild(td);
+        for (var eventIdx = 0; eventIdx < data.length; eventIdx++) {
+            var event = data[eventIdx];
+            if (event.location.lat < ne.lat() &&
+                event.location.lng < ne.lng() &&
+                event.location.lat > sw.lat() &&
+                event.location.lng > sw.lng()) 
+            {
+                filteredData.push(event);
+            }
         }
-    }
+        console.log(filteredData.length);
+
+        // initialize table
+        var tableDiv = document.getElementById('event_table');
+        while (tableDiv.hasChildNodes()) {
+            tableDiv.removeChild(tableDiv.lastChild);
+        }
+
+        var table = document.createElement('table');
+        tableDiv.appendChild(table);
+
+        // create table header
+        var thead = document.createElement('thead');
+        table.appendChild(thead);
+
+        var headerTr = document.createElement('tr');
+        thead.appendChild(headerTr);
+
+        var columnNames = [
+            'Name', 'Date', 'Location', 'Venue', 'songkick_uri'
+        ];
+        for (var i = 0; i < columnNames.length; i++){
+            var td = document.createElement('td');
+            headerTr.appendChild(td);
+
+            td.appendChild(document.createTextNode(columnNames[i]));
+        }
+        
+        // create tabel body
+        var tbody = document.createElement('tbody');
+        table.appendChild(tbody);
+
+        for (var i = 0; i < filteredData.length; i++) {
+            event = filteredData[i];
+
+            var cellElements = [
+                event.displayName,
+                event.start.date,
+                event.location.city,
+                event.venue.displayName,
+                event.uri
+            ];
+
+            var tr = document.createElement('tr');
+            tbody.appendChild(tr);
+
+            for (var j = 0; j < cellElements.length; j++) {
+                var td = document.createElement('td');
+                td.appendChild(document.createTextNode(cellElements[j]));
+
+                tr.appendChild(td);
+            }
+        }
+    })
 }
 
 
 function populateData(data) {
-    populateTable(data);
     populateMap(data);
 }
 
