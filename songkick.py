@@ -29,7 +29,9 @@ class SongkickCalendarsAPI(object):
 
     def get_user_calendar_entries(self, username, params=None):
         if params is None:
-            params = {'reason': 'tracked_artist'}
+            params = {}
+
+        params.setdefault('reason', 'tracked_artist')
 
         endpoint_format = 'users/{username}/calendar.json'
         endpoint = endpoint_format.format(username=username)
@@ -38,15 +40,30 @@ class SongkickCalendarsAPI(object):
 
         return result
 
+    def _get_user_calendar_response_page(self, username, page_number):
+        response = self.get_user_calendar_entries(username, params={'page': page_number})
+        response_json =  response.json()
+        results_page = response_json['resultsPage']
+
+        return results_page
+
 
 def get_user_events_list(username):
     client = SongkickCalendarsAPI()
 
-    response = client.get_user_calendar_entries(username)
+    # Get First Page of Calendar Entries.
+    results_page = client._get_user_calendar_response_page(username, 1)
 
-    response_json = response.json()
+    events_list = results_page['results']['calendarEntry']
 
-    events_list = response_json['resultsPage']['results']['calendarEntry']
+    total_entries, per_page = results_page['totalEntries'], results_page['perPage']
+    total_pages = (total_entries - len(events_list)) / per_page
+    total_pages = int(total_pages)
+
+    for i in range(2, total_pages + 1):
+        results_page = client._get_user_calendar_response_page(username, i)
+        events_list.extend(results_page['results']['calendarEntry'])
+
     events_list = [e['event'] for e in events_list]
 
     return events_list
