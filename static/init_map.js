@@ -80,21 +80,16 @@ function populateMap(data) {
                 strokeColor: color
             }
         });
+        marker.contentString = contentString
 
         markers[event_idx] = marker;
 
-        infoWindowCallbacks[event_idx] = (function(marker, infoWindow) {
-            return function () { 
-                infoWindow.setContent(contentString);
-                infoWindow.open(map, marker) 
-            };
-        })(marker, infoWindow);
-   }
-
-   for (var event_idx = 0; event_idx < data.length; event_idx++) {
-        markers[event_idx].addListener('click', infoWindowCallbacks[event_idx]);
+        marker.addListener('click', function() { 
+            infoWindow.close();
+            infoWindow.setContent(this.contentString);
+            infoWindow.open(map, this) 
+        });
     }
-
 
     map.addListener('idle', function(domEvent) {
         var filteredData = [];
