@@ -42,6 +42,10 @@ function populateMap(data) {
     var infoWindowCallbacks = [];
     var markers = [];
 
+    var infoWindow = new google.maps.InfoWindow({
+        content: ''
+    });
+
     for (var event_idx in data) {
         var event = data[event_idx]
 
@@ -52,9 +56,6 @@ function populateMap(data) {
             '<p>songkick uri: ' + event.uri + '</p>' +
             '</div>'
 
-        var infoWindow = new google.maps.InfoWindow({
-            content: contentString
-        });
 
         var now = new Date();
         var startDate = new Date(event.start.date);
@@ -84,6 +85,7 @@ function populateMap(data) {
 
         infoWindowCallbacks[event_idx] = (function(marker, infoWindow) {
             return function () { 
+                infoWindow.setContent(contentString);
                 infoWindow.open(map, marker) 
             };
         })(marker, infoWindow);
